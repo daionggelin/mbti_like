@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>你是哪种 AI 程序员？</title>
+<meta name="description" content="12 道题，测出你是哪种 AI 程序员。央企物流 AI 社区 DataClawHub 出品。">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='0' fill='%2315181f'/%3E%3Cpath d='M16 40l10-18 8 12 6-8 8 14' stroke='%23c8ff3d' stroke-width='6' fill='none' stroke-linecap='square' stroke-linejoin='miter'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ink:#15181f; --paper:#f3f5ec; --surface:#ffffff;
+  --accent:#c8ff3d; --shadow:#93be1f; --muted:#5c6470; --line:#15181f;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  min-height:100vh;color:var(--ink);background:var(--paper);
+  font-family:"Microsoft YaHei","PingFang SC",system-ui,-apple-system,sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+.grain{
+  position:fixed;inset:0;pointer-events:none;opacity:.12;z-index:0;
+  background-image:radial-gradient(var(--ink) .6px,transparent .6px);
+  background-size:7px 7px;mix-blend-mode:multiply;
+}
+main{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:22px 18px 56px}
+.hidden{display:none!important}
+
+/* 顶栏 */
+.topline{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  font-size:.8rem;font-weight:800;letter-spacing:.04em}
+.stamp{border:2px solid var(--line);padding:5px 9px;background:var(--accent)}
+
+/* 封面 */
+.hero{padding:44px 0 26px}
+h1{margin:0;font-size:clamp(2.3rem,11vw,3.6rem);line-height:.95;letter-spacing:-.05em;font-weight:900}
+h1 em{color:#6d8a12;font-style:normal}
+.lead{margin:18px 0 0;font-size:1rem;line-height:1.7;color:#3a4150}
+.rule{height:3px;background:var(--line);margin:18px 0 20px}
+.notice{margin-top:20px;padding-left:11px;border-left:3px solid var(--accent);
+  font-size:.8rem;line-height:1.55;color:var(--muted)}
+
+/* 按钮 */
+.button{
+  appearance:none;display:inline-block;border:2px solid var(--line);color:var(--ink);
+  background:var(--accent);cursor:pointer;border-radius:0;padding:13px 18px;
+  font:inherit;font-weight:900;font-size:1rem;text-decoration:none;text-align:center;
+  box-shadow:5px 5px 0 var(--shadow);
+  transition:transform .16s cubic-bezier(.16,1,.3,1),box-shadow .16s cubic-bezier(.16,1,.3,1);
+}
+.button:hover{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--shadow)}
+.button:active{transform:translate(5px,5px);box-shadow:none}
+.button.alt{background:var(--surface)}
+.button:focus-visible{outline:3px solid #6d8a12;outline-offset:3px}
+.button[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:5px 5px 0 var(--shadow)}
+
+/* 进度 */
+.progress{display:flex;align-items:center;gap:12px;margin:10px 0 16px;font-weight:900;font-size:.9rem}
+.bar{flex:1;height:12px;border:2px solid var(--line);background:var(--surface)}
+.fill{width:0;height:100%;background:var(--accent);transition:width .25s ease}
+
+/* 题目 */
+.question{background:var(--surface);border:2px solid var(--line);padding:20px 18px;
+  box-shadow:8px 8px 0 var(--shadow)}
+.eyebrow{color:#6d8a12;font-size:.78rem;font-weight:900;letter-spacing:.08em}
+.question h2{margin:10px 0 20px;font-size:clamp(1.12rem,4.6vw,1.4rem);line-height:1.42;letter-spacing:-.015em}
+.answers{display:grid;gap:10px}
+.answer{width:100%;text-align:left;background:var(--paper);border:2px solid var(--line);
+  padding:14px 15px;cursor:pointer;color:var(--ink);font:inherit;font-weight:700;
+  font-size:.95rem;line-height:1.5;border-radius:0;
+  transition:transform .16s cubic-bezier(.16,1,.3,1),background .16s}
+.answer:hover{transform:translateX(4px);background:var(--accent)}
+.answer:active{transform:translateX(7px)}
+.answer:focus-visible{outline:3px solid #6d8a12;outline-offset:2px}
+.quiz-actions{margin-top:16px}
+.back{border:0;border-bottom:2px solid var(--line);background:transparent;color:var(--ink);
+  cursor:pointer;font:inherit;font-weight:800;font-size:.9rem;padding:4px 0}
+.back:hover{color:#6d8a12;border-color:#6d8a12}
+.back[disabled]{border-color:transparent;color:var(--muted);cursor:not-allowed}
+
+/* 结果 */
+.done{display:flex;align-items:center;gap:12px;margin:10px 0 16px;font-weight:900;font-size:.9rem}
+.result-head{background:var(--surface);border:2px solid var(--line);padding:18px;
+  box-shadow:8px 8px 0 var(--shadow)}
+.code{display:inline-block;background:var(--accent);padding:5px 9px;font-weight:900;font-size:.82rem}
+.result-head h2{margin:14px 0 8px;font-size:clamp(1.7rem,7.5vw,2.4rem);line-height:.98;letter-spacing:-.04em}
+.result-head p{margin:10px 0 0;font-size:.95rem;line-height:1.65}
+
+.card-wrap{margin-top:18px;border:2px solid var(--line);background:var(--surface);
+  box-shadow:8px 8px 0 var(--shadow)}
+.card-wrap img{display:block;width:100%;height:auto}
+.card-hint{margin-top:12px;padding:11px 13px;background:var(--surface);border-left:5px solid var(--accent);
+  font-size:.88rem;line-height:1.55;font-weight:700}
+.card-hint b{background:var(--accent);padding:1px 5px}
+
+.share-box{margin-top:18px;background:var(--surface);border:2px solid var(--line);padding:16px;
+  box-shadow:8px 8px 0 var(--shadow)}
+.share-box h3{margin:0 0 10px;font-size:1rem}
+.share-preview{margin:0 0 14px;padding:11px 12px;background:var(--paper);border:2px solid var(--line);
+  font-size:.86rem;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.share-actions{display:flex;flex-wrap:wrap;gap:10px}
+.share-actions .button{flex:1 1 auto;font-size:.92rem;padding:11px 14px}
+
+.cta{margin-top:18px;display:block;width:100%;font-size:1.02rem}
+.footnote{margin-top:26px;font-size:.78rem;color:var(--muted);line-height:1.6}
+
+/* 结果页的「直接查看报告」入口 */
+.report-link{margin:14px 0 0;font-size:.86rem;color:var(--muted)}
+.linkbtn{appearance:none;border:0;border-bottom:2px solid var(--line);background:transparent;
+  color:var(--ink);cursor:pointer;font:inherit;font-weight:800;font-size:.86rem;padding:2px 0}
+.linkbtn:hover{color:#6d8a12;border-color:#6d8a12}
+
+/* 完整画像报告 */
+.report-head{background:var(--surface);border:2px solid var(--line);padding:18px;
+  box-shadow:8px 8px 0 var(--shadow)}
+.report-head h2{margin:14px 0 8px;font-size:clamp(1.7rem,7.5vw,2.4rem);line-height:.98;letter-spacing:-.04em}
+.report-head p{margin:10px 0 0;font-size:.95rem;line-height:1.65}
+.traits{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.traits span{border:2px solid var(--line);background:var(--accent);color:#15181f;
+  padding:5px 9px;font-size:.8rem;font-weight:900;letter-spacing:.02em}
+.report-block{margin-top:18px;background:var(--surface);border:2px solid var(--line);
+  padding:18px;box-shadow:8px 8px 0 var(--shadow)}
+.report-block h3{margin:0 0 10px;font-size:1.02rem;letter-spacing:.01em}
+.report-block h3::before{content:'';display:inline-block;width:9px;height:9px;
+  background:var(--accent);border:2px solid var(--line);margin-right:8px}
+.report-block p{margin:0;font-size:.95rem;line-height:1.85;color:#2c3340}
+.report-next{margin-top:18px;background:var(--surface);border:2px solid var(--line);
+  padding:18px;box-shadow:8px 8px 0 var(--shadow)}
+.report-next h3{margin:0 0 10px;font-size:1.02rem}
+.report-next p{margin:0;font-size:.92rem;line-height:1.7;color:#2c3340}
+.report-actions{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px}
+.report-actions .button{flex:1 1 auto}
+
+/* 提示条 */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,140%);
+  background:var(--ink);color:var(--paper);border:2px solid var(--ink);
+  padding:11px 18px;font-weight:800;font-size:.9rem;z-index:50;
+  transition:transform .26s cubic-bezier(.16,1,.3,1);max-width:88vw;text-align:center;
+}
+.toast.show{transform:translate(-50%,0)}
+
+@media (max-width:380px){
+  .topline{font-size:.74rem}
+  .question{padding:17px 14px}
+  .card-hint{font-size:.84rem}
+}
+@media (prefers-color-scheme:dark){
+  :root{ --ink:#eef1e8; --paper:#141821; --surface:#1d2330;
+         --accent:#c8ff3d; --shadow:#7f9f1c; --muted:#a8b1bd; --line:#eef1e8; }
+  body{background:var(--paper)}
+  .grain{mix-blend-mode:screen;opacity:.07}
+  h1 em,.eyebrow,.back:hover{color:var(--accent)}
+  .lead{color:#cfd5de}
+  .answer{background:#232a38}
+  .answer:hover{color:#15181f}
+  .share-preview{background:#171d27}
+  .button{color:#15181f}
+  .stamp,.code{color:#15181f}
+  .report-block p,.report-next p{color:#d3d9e2}
+  .traits span{color:#15181f}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<main>
+
+  <header class="topline">
+    <span>DataClawHub</span>
+    <span class="stamp">央企物流 AI 社区</span>
+  </header>
+
+  <!-- ========== 封面 ========== -->
+  <section id="intro" class="hero">
+    <h1>你是哪种<br><em>AI 程序员？</em></h1>
+    <p class="lead">12 道情境题，从你做事的方式里，认出你属于哪一类智能体开发者。</p>
+    <div class="rule"></div>
+    <button id="start" class="button" type="button">开始测试 · 约 2 分钟</button>
+    <div class="notice">不收集个人信息。结果只在你的手机上生成。</div>
+  </section>
+
+  <!-- ========== 答题 ========== -->
+  <section id="quiz" class="hidden">
+    <div class="progress">
+      <span id="count">01 / 12</span>
+      <div class="bar"><div id="fill" class="fill"></div></div>
+    </div>
+    <div class="question">
+      <div id="eyebrow" class="eyebrow">第 01 题</div>
+      <h2 id="prompt"></h2>
+      <div id="answers" class="answers"></div>
+      <div class="quiz-actions">
+        <button id="previous" class="back" type="button">← 返回上一题</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 结果 ========== -->
+  <section id="result" class="hidden">
+    <div class="done">
+      <span>测试完成</span>
+      <div class="bar"><div class="fill" style="width:100%"></div></div>
+    </div>
+
+    <div class="result-head">
+      <span id="code" class="code"></span>
+      <h2 id="title"></h2>
+      <p id="quote"></p>
+    </div>
+
+    <div class="card-wrap">
+      <img id="card" alt="我的 AI 程序员画像卡片">
+    </div>
+    <div class="card-hint">
+      <b>长按上方卡片</b>保存到相册，再发朋友圈 —— 卡片上带你的专属邀请码 <b id="hintCode">BSHHCZ</b>
+    </div>
+
+    <div class="share-box">
+      <h3>分享文案</h3>
+      <p id="sharePreview" class="share-preview"></p>
+      <div class="share-actions">
+        <button id="copy" class="button" type="button">复制文案</button>
+        <button id="shuffle" class="button alt" type="button">换个说法</button>
+      </div>
+    </div>
+
+    <a id="cta" class="button cta" href="#">注册并解锁完整画像报告 →</a>
+    <p class="report-link">
+      已经注册过了？<button id="viewReport" class="linkbtn" type="button">直接查看完整报告</button>
+    </p>
+
+    <p class="footnote">
+      测试结果由 12 道题的作答方式推导，仅供自我参照。<br>
+      完整报告需在 DataClawHub 注册后查看。
+    </p>
+    <p style="margin-top:18px">
+      <button id="again" class="button alt" type="button">再测一次</button>
+    </p>
+  </section>
+
+  <!-- ========== 完整画像报告（注册后） ========== -->
+  <section id="report" class="hidden">
+    <div class="report-head">
+      <span id="rCode" class="code"></span>
+      <h2 id="rName"></h2>
+      <p id="rQuote"></p>
+      <div id="rTraits" class="traits"></div>
+    </div>
+
+    <div class="card-wrap">
+      <img id="rCard" alt="我的 AI 程序员画像卡片">
+    </div>
+
+    <article class="report-block">
+      <h3>你的工作方式</h3>
+      <p id="rHow"></p>
+    </article>
+
+    <article class="report-block">
+      <h3>你的盲点</h3>
+      <p id="rBlind"></p>
+    </article>
+
+    <div class="report-next">
+      <h3>接下来</h3>
+      <p>想找一件现在就能上手的事？去平台看看与你这一型相配的任务和成果。</p>
+      <a id="rCta" class="button cta" href="#">去 DataClawHub 看看 →</a>
+    </div>
+
+    <p class="report-actions">
+      <button id="rBack" class="button alt" type="button">返回结果页</button>
+      <button id="rRetake" class="button alt" type="button">重新测试</button>
+    </p>
+  </section>
+
+</main>
+<div id="toast" class="toast"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------- 配置 ---------- */
+  var INVITE_CODE = 'BSHHCZ';
+  var REGISTER_URL = 'https://dataclawhub.com/login?mode=register&ref=' + INVITE_CODE;
+  var STORE_KEY = 'ai_profile_progress_v1';   // 答题进度（答完即清）
+  var TYPE_KEY  = 'ai_profile_type_v1';       // 测出的类型（长期保留，供下次直接看报告）
+
+  /* ---------- 题库（12 题，每题 2 选项，各标注所属极） ---------- */
+  var QUESTIONS = [
+    { q:'你在做一个「区域仓补货建议」智能体。上线前，团队要你确认规则逻辑。你更可能先做哪件事？',
+      a:[ {t:'拉出近一年订单、库存与在途数据，看清分布和异常点，再据此定规则', p:'D'},
+          {t:'先和一线仓管聊一轮，形成对问题的整体判断，再去数据里找印证', p:'N'} ] },
+    { q:'你的智能体在测试环境表现正常，但在真实仓库里出现了几笔明显不合理的建议。你第一步会：',
+      a:[ {t:'调出这几笔的完整输入数据与推理链路，逐条比对', p:'D'},
+          {t:'先去现场看这几笔发生的实际情境，理解当时的业务状态', p:'N'} ] },
+    { q:'平台要你评估一个已上线的智能体「值不值得继续投入」。你更依赖哪种判断？',
+      a:[ {t:'看它近三个月的调用量、准确率与人工介入率的变化曲线', p:'D'},
+          {t:'看一线使用者最近的反馈与抱怨集中在哪里', p:'N'} ] },
+    { q:'智能体需要新增「PDF 提单字段抽取」能力。评审时你倾向推荐哪条路径？',
+      a:[ {t:'接入社区已有的开源工具或 MCP 服务，两周内可完成验证', p:'T'},
+          {t:'自研一套抽取流程，可控性与后续迭代空间更大', p:'B'} ] },
+    { q:'现成工具能覆盖约 80% 的版式，剩余 20% 需要额外适配。此时你更倾向：',
+      a:[ {t:'先用现成方案把主干跑通，把 20% 作为后续迭代项推进', p:'T'},
+          {t:'直接自研一版，避免长期被这 20% 的特例牵着走', p:'B'} ] },
+    { q:'团队要为一个长期项目选技术底座。你更看重哪一点？',
+      a:[ {t:'生态活跃、有社区持续维护，能跟上后续的迭代节奏', p:'T'},
+          {t:'代码可控、能按自己的需要修改，不受上游节奏牵制', p:'B'} ] },
+    { q:'你有两周时间做一个物流场景的智能体。两种起点，你更愿意选哪个？',
+      a:[ {t:'从社区已有的成果出发，在它基础上做出一个更成熟的版本', p:'R'},
+          {t:'从一个没人做过的细分问题出发，哪怕只能做到初步可用', p:'P'} ] },
+    { q:'面对一个已经有人做过的需求，你更认同下面哪种做法？',
+      a:[ {t:'优先复用并改进已有成果，把省下的时间投到集成与验证上', p:'R'},
+          {t:'优先重新设计一版，避免被已有方案的假设限制住', p:'P'} ] },
+    { q:'你的智能体上线后效果不错。接下来你更想做什么？',
+      a:[ {t:'把它整理成别人能直接接入的形式，让更多人用起来', p:'R'},
+          {t:'把这次遇到的问题再往前推一步，试一个更难的场景', p:'P'} ] },
+    { q:'一个「跨境单证全流程校验」任务交到你手上，周期两周。你更可能怎么开始？',
+      a:[ {t:'先把流程拆成若干环节，明确每一环由哪个工具或智能体负责', p:'O'},
+          {t:'先挑出最容易出错的那一环，集中精力把它做扎实', p:'H'} ] },
+    { q:'回顾一个你参与过的、效果不错的项目，你觉得它做成的主要原因更接近：',
+      a:[ {t:'各环节衔接顺畅，整体编排得当', p:'O'},
+          {t:'关键环节做得足够深，没有明显短板', p:'H'} ] },
+    { q:'项目进入第三周，进度落后于计划。你更倾向于：',
+      a:[ {t:'重新检查各环节的衔接，看瓶颈是不是出在编排上', p:'O'},
+          {t:'集中投入在最拖后腿的那个环节，先把它解决掉', p:'H'} ] }
+  ];
+
+  /* ---------- 16 型数据 ---------- */
+  var TYPES = {
+    DTRO:{name:'链式·调度师', quote:'你不造轮子，你让轮子们一起跑起来。',
+      traits:['数据驱动','善用现成','复用优先','擅长编排'],
+      how:'你动手前习惯先看数据——分布在哪里、异常在哪里，规则要有据可依。遇到新需求，你的第一反应是去社区里找现成的开放工具或服务，先接上跑通，而不是立刻自己写。你真正的长处在后半程：把几个各有所长的工具和智能体编排成一条顺畅的流水线，让它们各管一段、彼此衔接。你不追求每个环节都由自己实现，你在意的是整条链路能不能稳定跑完。',
+      blind:'复用让你跑得比谁都快，但也让你更容易停在"能用就好"——少数需要深挖的场景里，你会比自研派更早撞上工具的天花板。对底层实现的理解常常停在够用层面，遇到工具不支持的边角需求时容易束手。'},
+    DTRH:{name:'链式·改造师', quote:'先接上，再把它改到好用。',
+      traits:['数据驱动','善用现成','复用优先','专注攻坚'],
+      how:'你动手前先看数据，规则要有据可依。你习惯站在别人的成果上起步——找现成的开放工具或社区已有方案先接上，而不是从零去造。但你不会止步于"能用"：当现成方案在某个环节卡住，你会钻进去把它改到真正贴合业务。你的价值往往体现在那些"别人做了一半、差最后一公里"的项目上——你既懂怎么复用，也肯深挖那一公里。',
+      blind:'你擅长把别人的东西改好，但长期做改造容易让你的技术判断被原方案的假设框住。很少有机会从零设计一套架构，独立开新局的经验相对薄弱。'},
+    DTPO:{name:'链式·架构师', quote:'先想清楚骨架，再决定每块用什么。',
+      traits:['数据驱动','善用现成','开荒优先','擅长编排'],
+      how:'你从数据出发理解问题，但真正让你兴奋的是设计。你不会一上来就写代码，而是先想清楚：这个系统该分几层、每层负责什么、用什么现成能力去填。你愿意大量复用成熟的开源工具和社区成果，因为在你看来重复实现就是浪费。你追求的是一个别人能接手、能扩展的整体结构，而不是某个环节做到极致。',
+      blind:'你习惯站在整体看问题，容易低估单点实现的难度，把"接一下就行"当成理所当然。当某个环节远比预想复杂时，你的推进节奏会被打乱。'},
+    DTPH:{name:'链式·拓荒匠', quote:'没人做过的那块，交给我。',
+      traits:['数据驱动','善用现成','开荒优先','专注攻坚'],
+      how:'你习惯用数据说话，动手前先看证据。日常工作中你大量复用现成的开放工具，能接就接、不重复造。但一旦遇到没人解决过的问题，你会切换成另一种状态：自己写、反复试、直到啃下来。你不太在意成果能不能立刻被别人复用，你在意的是那个卡了很多人的点到底能不能被解开。',
+      blind:'你啃硬骨头的耐性是优势，但也容易把时间投进一个其实可以绕过的坑里。对"值不值得自己写"的判断有时偏晚，容易在收尾阶段赶进度。'},
+    DBRO:{name:'炼金·调度师', quote:'数据要自己洗，环节要串成线。',
+      traits:['数据驱动','偏好自研','复用优先','擅长编排'],
+      how:'你相信数据里藏着答案，动手前一定先把分布、异常和边界看清楚。与工具派不同，你更愿意自己掌控关键实现——外部工具的黑箱会让你不安。但你的长处不在单点，而在串联：你习惯把任务拆成若干环节，让不同的能力和角色各管一段，自己盯着整体是否顺畅。你要的是既可控、又跑得起来的系统。',
+      blind:'你对可控性的要求在关键系统里是优点，但在快速验证阶段会拖慢节奏。自研倾向让你有时低估现成方案的成熟度，重复实现了别人早已做好的东西。'},
+    DBRH:{name:'炼金·改造师', quote:'现成的先用，但骨头得自己啃。',
+      traits:['数据驱动','偏好自研','复用优先','专注攻坚'],
+      how:'你从数据出发，习惯先把事实看清楚再动手。你愿意复用社区已有的成果作为起点，但你不会被动接受：关键实现你倾向自己掌控，尤其是那些决定成败的环节。你通常接手的是"能跑但不够稳"的系统，然后一点点把它改造成可靠的版本。你的成就感来自把一个不完美的东西真正做扎实。',
+      blind:'你愿意接手别人留下的半成品，这让你很受欢迎，但也让你的作品总带着别人的痕迹。你花在理解和改造上的时间，本可以用来验证一个全新的思路。'},
+    DBPO:{name:'炼金·架构师', quote:'从零搭一套，每一层都要说得清。',
+      traits:['数据驱动','偏好自研','开荒优先','擅长编排'],
+      how:'你做任何事前先看数据，规则和结构都要有依据。你不满足于拼装现成工具，认为关键能力应当自己掌握，这样系统的行为才可解释、可调整。你的重心放在整体：如何分层、如何让各模块协同、如何让后人能接着往上盖。你愿意为架构投入时间，因为你相信结构决定了这个成果能走多远。',
+      blind:'你对架构完整性的追求容易变成过度设计，尤其在一个只需快速验证的场景里。从零搭起意味着前期产出慢，你的成果常常要到后期才显出优势。'},
+    DBPH:{name:'炼金·拓荒匠', quote:'自己写，自己啃，做到别人做不到。',
+      traits:['数据驱动','偏好自研','开荒优先','专注攻坚'],
+      how:'你用数据判断方向，但更相信亲手实现的力量。你很少依赖现成工具，关键能力一定要自己掌握；遇到没人解决的问题，你会一头扎进去，反复试错直到打通。你不太在意路线是否优雅，只在意结果是否成立。你往往是团队里那个把"大家都觉得做不了"变成"已经跑起来了"的人。',
+      blind:'你的深度和韧性是稀缺的，但也容易陷进孤军奋战，让进展依赖你一个人。成果常常只有你自己能维护，别人很难接手继续往下做。'},
+    NTRO:{name:'嗅觉·调度师', quote:'先有判断，再拼出一条线。',
+      traits:['直觉判断','善用现成','复用优先','擅长编排'],
+      how:'你对业务有手感，往往在数据还不完整时就能大致判断问题出在哪。你不喜欢从零实现，更愿意把社区里成熟的能力拿来组合。你的强项是编排：把不同工具和智能体放到合适的位置上，让整条链路自己转起来。你推进得快，因为你把时间花在判断和组合上，而不是花在实现细节上。',
+      blind:'你的快来自判断和复用，但当判断本身出错时，整条链路会一起偏。对底层实现的生疏，让你在排查深层问题时不如自研派从容。'},
+    NTRH:{name:'嗅觉·改造师', quote:'哪里不对我一眼能看出来，然后就动手改。',
+      traits:['直觉判断','善用现成','复用优先','专注攻坚'],
+      how:'你靠业务直觉定位问题，常常比盯着数据的人更快找到症结。你不排斥使用现成工具，但发现问题后你会直接上手改，而不是等一个更好的方案出现。你擅长在别人已经做出来的东西上做二次加工，把它调成真正好用的样子。你不太在意方案是否原创，在意的是问题有没有被解决。',
+      blind:'你凭手感判断，效率高但不易复盘，团队常常说不清你为什么这么改。对系统性验证的耐心不足，改动带来的副作用有时要等到上线才暴露。'},
+    NTPO:{name:'嗅觉·架构师', quote:'先看清全局，再用最少的力气搭起来。',
+      traits:['直觉判断','善用现成','开荒优先','擅长编排'],
+      how:'你习惯先形成对业务的整体判断，再决定怎么搭。你对实现细节兴趣有限，更愿意复用成熟能力，把精力放在结构设计上——系统怎么分层、各环节怎么衔接、扩展点留在哪里。你追求用尽量少的自研量达到目标，并且让这套结构能被别人接手。你的优势是看得远、动手省。',
+      blind:'你善于借力，但也容易把复杂度估计得偏低，觉得"接一下就行"。对具体实现难度缺乏体感，方案在落地阶段可能被细节拖住。'},
+    NTPH:{name:'嗅觉·拓荒匠', quote:'凭感觉找对方向，然后一头扎进去。',
+      traits:['直觉判断','善用现成','开荒优先','专注攻坚'],
+      how:'你判断方向靠的是对业务的理解和手感，往往很快就能锁定值得做的点。确定方向后，你更愿意借用现成的工具和能力，把力气集中在最难的那一环上。你不追求把整套系统都做完，而是先把最关键的难点打通。你身上有一种"先让它跑起来"的冲劲。',
+      blind:'你擅长的单点突破很亮眼，但缺少对整体的持续经营，成果容易停在原型阶段。对后续维护和交接考虑较少，问题解决之后就不太想再碰。'},
+    NBRO:{name:'独行·调度师', quote:'不用多说，把合适的角色摆对位置就行。',
+      traits:['直觉判断','偏好自研','复用优先','擅长编排'],
+      how:'你对业务有自己的判断，不太依赖数据报表，也不太依赖现成工具的说明书。但在组织协作上你有天赋：知道谁适合做什么，能把不同能力和角色放到合适的位置上。你倾向复用已有的成果作为组件，而不是自己造。你更像个导演——不亲自演，但整场戏的节奏由你定。',
+      blind:'你依赖直觉判断人和事，这让你决策快，但也让别人难以复用你的判断逻辑。不太愿意写文档和沉淀方法，团队协作时信息传递容易失真。'},
+    NBRH:{name:'独行·改造师', quote:'看着不对就动手，改到对为止。',
+      traits:['直觉判断','偏好自研','复用优先','专注攻坚'],
+      how:'你对问题的判断来自经验和手感，常常跳过分析直接动手。你愿意用现成的成果做底子，但不会照单全收——哪里不顺手就改哪里，直到它符合你的标准。你很少和别人争论方案，因为你倾向于用结果说话。你的可靠来自反复的现场调试，而不是图纸上的推演。',
+      blind:'你的高标准让产出扎实，但也让改动变得个人化、难以交接。很少记录自己为什么这么改，后续维护者需要重新理解一遍你的思路。'},
+    NBPO:{name:'独行·架构师', quote:'先在心里跑一遍，再把它搭出来。',
+      traits:['直觉判断','偏好自研','开荒优先','擅长编排'],
+      how:'你靠对业务的整体判断来设计系统，不太依赖数据验证，也不太依赖现成工具。你习惯在脑子里先把整个结构跑一遍：各模块怎么分工、数据怎么流转、扩展点留在哪里。你愿意自己实现关键部分，因为这样结构才完全符合你的设想。你追求的是一个逻辑自洽、你能完整解释的系统。',
+      blind:'你的设计自洽度很高，但闭环在你自己脑子里，别人较难进入。当现实反馈与你的设想不符时，调整的代价会比较大。'},
+    NBPH:{name:'独行·拓荒匠', quote:'没人做过，那就我来做。',
+      traits:['直觉判断','偏好自研','开荒优先','专注攻坚'],
+      how:'你相信自己对业务的判断，不需要等数据齐全才动手。关键环节你宁愿自己写，因为可控、可改、不用迁就别人的设计。遇到卡点你会一头扎进去，反复试，直到把它解开。你很少考虑成果能不能被别人复用，你只在意这件事到底能不能做成。',
+      blind:'你的深度是稀缺的，但成果容易只活在你手里，别人很难接着往下做。不太愿意复用别人的东西，重复投入在已经被解决过的问题上。'}
+  };
+
+  /* ---------- 分享文案模板（3 个，轮换） ---------- */
+  var TEMPLATES = [
+    function(t, code){ return '12 道题测出我是「' + t.name + '」' + code + '。' + t.quote + '你是什么型？'; },
+    function(t){ return '测了下 AI 程序员画像，我是「' + t.name + '」。想知道你是哪种？2 分钟，扫一下就知道。'; },
+    function(t){ return t.quote + '\n我是「' + t.name + '」，你是哪个？'; }
+  ];
+  var tplIndex = 0;
+
+  /* ---------- 元素 ---------- */
+  var $ = function(id){ return document.getElementById(id); };
+  var elIntro = $('intro'), elQuiz = $('quiz'), elResult = $('result'), elReport = $('report');
+
+  /* ---------- 报告页地址（供平台注册后回跳） ---------- */
+  // 用当前页地址 + ?type=代号，平台若支持"注册后跳转"参数，可直接回跳到这里
+  function reportUrlFor(code){
+    return location.origin + location.pathname + '?type=' + code;
+  }
+  // 完整注册链接：带推广码（归因）+ 类型（报告）+ 回跳地址
+  function registerUrlFor(code){
+    var u = REGISTER_URL + '&type=' + code;
+    u += '&redirect=' + encodeURIComponent(reportUrlFor(code));
+    return u;
+  }
+
+  /* ---------- 状态 ---------- */
+  var step = 0;
+  var picks = [];        // 每题选了第几个选项（0/1）
+  var tally = {D:0,N:0,T:0,B:0,R:0,P:0,O:0,H:0};
+  var currentType = null;
+
+  /* ---------- 计分 ---------- */
+  // 4 个维度，各 3 题；同一维度的两极互补（合计恒为 3）
+  // 故「某极 >= 2」即该极胜出，天然无平票
+  function computeCode(){
+    return (tally.D >= 2 ? 'D' : 'N')
+         + (tally.T >= 2 ? 'T' : 'B')
+         + (tally.R >= 2 ? 'R' : 'P')
+         + (tally.O >= 2 ? 'O' : 'H');
+  }
+
+  /* ---------- 渲染题目 ---------- */
+  function render(){
+    var item = QUESTIONS[step];
+    $('count').textContent = pad(step + 1) + ' / ' + pad(QUESTIONS.length);
+    $('fill').style.width = (step / QUESTIONS.length * 100) + '%';
+    $('eyebrow').textContent = '第 ' + pad(step + 1) + ' 题';
+    $('prompt').textContent = item.q;
+
+    var list = $('answers');
+    list.innerHTML = '';
+    item.a.forEach(function(opt, idx){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'answer';
+      b.textContent = String.fromCharCode(65 + idx) + '. ' + opt.t;
+      b.addEventListener('click', function(){ answer(idx); });
+      list.appendChild(b);
+    });
+
+    $('previous').disabled = (step === 0);
+    save();
+  }
+
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+
+  /* ---------- 作答 / 回退 ---------- */
+  function answer(idx){
+    var pole = QUESTIONS[step].a[idx].p;
+    tally[pole]++;
+    picks[step] = idx;
+    step++;
+    if (step < QUESTIONS.length) { render(); window.scrollTo({top:0}); }
+    else { showResult(); }
+  }
+
+  function previous(){
+    if (step === 0) return;
+    step--;
+    var idx = picks[step];
+    if (typeof idx === 'number') { tally[QUESTIONS[step].a[idx].p]--; picks[step] = undefined; }
+    render();
+    window.scrollTo({top:0});
+  }
+
+  /* ---------- 结果 ---------- */
+  // 只负责把某一型画到结果页上（供答完题、以及从报告页返回时复用）
+  function renderResult(code){
+    var t = TYPES[code];
+    if (!t) return false;
+    currentType = t;
+
+    elIntro.classList.add('hidden');
+    elQuiz.classList.add('hidden');
+    elReport.classList.add('hidden');
+    elResult.classList.remove('hidden');
+
+    $('code').textContent = code;
+    $('title').textContent = t.name;
+    $('quote').textContent = t.quote;
+    $('card').src = './cards/' + code + '.jpg';
+    $('card').alt = t.name + ' 画像卡片';
+
+    // 注册链接带上类型与回跳地址；平台支持则注册后自动回到完整报告
+    $('cta').href = registerUrlFor(code);
+
+    tplIndex = 0;
+    renderShare();
+    return true;
+  }
+
+  function showResult(){
+    var code = computeCode();
+    if (!renderResult(code)) return;
+    rememberType(code);      // 记住本机测出的类型，下次打开可直接回到报告
+    clearSave();             // 答题进度已用完，清掉；但类型另行保留
+    window.scrollTo({top:0});
+  }
+
+  /* ---------- 完整画像报告（注册后） ---------- */
+  function showReport(code){
+    var t = TYPES[code];
+    if (!t) return false;
+
+    currentType = t;
+
+    elIntro.classList.add('hidden');
+    elQuiz.classList.add('hidden');
+    elResult.classList.add('hidden');
+    elReport.classList.remove('hidden');
+
+    $('rCode').textContent = code;
+    $('rName').textContent = t.name;
+    $('rQuote').textContent = t.quote;
+    $('rCard').src = './cards/' + code + '.jpg';
+    $('rCard').alt = t.name + ' 画像卡片';
+
+    var box = $('rTraits');
+    box.innerHTML = '';
+    (t.traits || []).forEach(function(label){
+      var s = document.createElement('span');
+      s.textContent = label;
+      box.appendChild(s);
+    });
+
+    $('rHow').textContent = t.how || '';
+    $('rBlind').textContent = t.blind || '';
+    // 报告页底部的行动入口也要带推广码，保证归因不丢
+    $('rCta').href = registerUrlFor(code);
+
+    window.scrollTo({top:0});
+    return true;
+  }
+
+  function renderShare(){
+    $('sharePreview').textContent = TEMPLATES[tplIndex](currentType, $('code').textContent);
+  }
+
+  /* ---------- 复制 ---------- */
+  function copyText(text){
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).catch(function(){ return legacyCopy(text); });
+    }
+    return legacyCopy(text);
+  }
+  function legacyCopy(text){
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly','');
+      ta.style.position = 'fixed';
+      ta.style.top = '-1000px';
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      var ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok ? Promise.resolve() : Promise.reject();
+    } catch (e) { return Promise.reject(e); }
+  }
+
+  function toast(msg){
+    var t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(function(){ t.classList.remove('show'); }, 2000);
+  }
+
+  /* ---------- 记住测出的类型 ---------- */
+  // 平台不支持保存类型、也不支持注册后回跳，所以「记住用户是哪一型」只能由本机负责。
+  // 存下来之后：用户从任何入口再次打开本页，都能直接看到自己的完整报告。
+  function rememberType(code){
+    if (!TYPES[code]) return;
+    try {
+      localStorage.setItem(TYPE_KEY, JSON.stringify({ code: code, at: Date.now() }));
+    } catch(e){}
+  }
+  function recallType(){
+    try {
+      var raw = localStorage.getItem(TYPE_KEY);
+      if (!raw) return null;
+      var d = JSON.parse(raw);
+      if (d && typeof d.code === 'string' && TYPES[d.code]) return d.code;
+    } catch(e){}
+    return null;
+  }
+  function forgetType(){
+    try { localStorage.removeItem(TYPE_KEY); } catch(e){}
+  }
+  // 是否有「答到一半」的进度：有的话说明用户正在重测，不应被旧报告盖住
+  function hasProgress(){
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return false;
+      var d = JSON.parse(raw);
+      return !!(d && typeof d.step === 'number' && d.step > 0);
+    } catch(e){ return false; }
+  }
+
+  /* ---------- 本地进度 ---------- */
+  function save(){
+    try { localStorage.setItem(STORE_KEY, JSON.stringify({step:step, picks:picks})); } catch(e){}
+  }
+  function load(){
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return false;
+      var d = JSON.parse(raw);
+      if (!d || !Array.isArray(d.picks)) return false;
+      var n = Math.min(d.step || 0, QUESTIONS.length - 1);
+      if (n <= 0) return false;
+      step = n;
+      picks = d.picks.slice(0, n);
+      tally = {D:0,N:0,T:0,B:0,R:0,P:0,O:0,H:0};
+      for (var i = 0; i < n; i++) {
+        var idx = picks[i];
+        if (typeof idx === 'number') tally[QUESTIONS[i].a[idx].p]++;
+      }
+      return true;
+    } catch(e){ return false; }
+  }
+  function clearSave(){
+    try { localStorage.removeItem(STORE_KEY); } catch(e){}
+  }
+
+  /* ---------- 事件绑定 ---------- */
+  $('start').addEventListener('click', function(){
+    elIntro.classList.add('hidden');
+    elQuiz.classList.remove('hidden');
+    if (!load()) { step = 0; picks = []; tally = {D:0,N:0,T:0,B:0,R:0,P:0,O:0,H:0}; }
+    render();
+    window.scrollTo({top:0});
+  });
+
+  $('previous').addEventListener('click', previous);
+
+  $('copy').addEventListener('click', function(){
+    var text = $('sharePreview').textContent;
+    copyText(text).then(function(){ toast('已复制，去发朋友圈吧'); })
+                  .catch(function(){ toast('复制失败，请长按上方文案手动复制'); });
+  });
+
+  $('shuffle').addEventListener('click', function(){
+    tplIndex = (tplIndex + 1) % TEMPLATES.length;
+    renderShare();
+    toast('换了一种说法');
+  });
+
+  $('again').addEventListener('click', function(){
+    step = 0; picks = [];
+    tally = {D:0,N:0,T:0,B:0,R:0,P:0,O:0,H:0};
+    currentType = null;
+    clearSave();
+    elResult.classList.add('hidden');
+    elIntro.classList.remove('hidden');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+
+  // 结果页 → 直接查看完整报告（兜底：平台未回跳时也能看）
+  $('viewReport').addEventListener('click', function(){
+    if (!showReport(computeCode())) toast('暂时无法生成报告，请重新测试');
+  });
+
+  // 报告页 → 结果页（从 ?type= 或本机记忆直接进来时，结果页内容尚未渲染，这里补上）
+  $('rBack').addEventListener('click', function(){
+    var code = $('rCode').textContent;
+    if (TYPES[code] && renderResult(code)) return;
+    // 拿不到类型就退回封面，不留空白的半成品页面
+    elReport.classList.add('hidden');
+    elIntro.classList.remove('hidden');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+
+  // 报告页 → 重新测试
+  $('rRetake').addEventListener('click', function(){
+    step = 0; picks = [];
+    tally = {D:0,N:0,T:0,B:0,R:0,P:0,O:0,H:0};
+    currentType = null;
+    clearSave();
+    elReport.classList.add('hidden');
+    elResult.classList.add('hidden');
+    elQuiz.classList.add('hidden');
+    elIntro.classList.remove('hidden');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+
+  /* ---------- 入口路由 ---------- */
+  // 优先级：?type= 参数 > 本机记忆的类型 > 封面
+  //   ?type=  —— 平台回跳，或把报告链接单独发给别人
+  //   本机记忆 —— 用户自己回来（从平台内容里点回本站、或直接再打开本页）
+  (function route(){
+    var code = null;
+    try {
+      var m = location.search.match(/[?&]type=([A-Za-z]{4})(?:&|$)/);
+      if (m) code = m[1].toUpperCase();
+    } catch(e){}
+
+    // 1) 显式参数优先（平台回跳 / 分享链接）
+    if (code && TYPES[code]) { showReport(code); return; }
+
+    // 2) 有未完成的答题进度 → 停在封面让用户继续答，不要用旧报告盖住
+    if (hasProgress()) return;
+
+    // 3) 本机记得类型 —— 用户自己回来时直接看到自己的报告
+    var remembered = recallType();
+    if (remembered) { showReport(remembered); return; }
+
+    // 4) 都没有 → 停在封面，正常走答题流程
+  })();
+
+})();
+</script>
+</body>
+</html>
